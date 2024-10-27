@@ -88,23 +88,22 @@ const SpecialDishes = () => {
       <div className="text-left">
         <p className="subtitle">Special Dishes</p>
         <h2 className="title md:w-[520px]">Standout Dishes From Our Menu</h2>
-        {/* </div> */}
+      </div>
 
-        {/* arrow btn */}
-        <div className="md:absolute inset-y-3/4 right-0 mb-10 md:mr-24">
-          <button
-            onClick={() => slider?.current?.slickPrev()}
-            className="btn p-2 rounded-full ml-5"
-          >
-            <FaAngleLeft className="w-8 h-8 p-1" />
-          </button>
-          <button
-            onClick={() => slider?.current?.slickNext()}
-            className="btn p-2 rounded-full ml-5 bg-green"
-          >
-            <FaAngleRight className="w-8 h-8 p-1" />
-          </button>
-        </div>
+      {/* arrow btn */}
+      <div className="md:absolute right-3 top-20px">
+        <button
+          onClick={() => slider?.current?.slickPrev()}
+          className="btn p-2 rounded-full ml-5"
+        >
+          <FaAngleLeft className="w-8 h-8 p-1" />
+        </button>
+        <button
+          onClick={() => slider?.current?.slickNext()}
+          className="btn p-2 rounded-full ml-5 bg-green"
+        >
+          <FaAngleRight className="w-8 h-8 p-1" />
+        </button>
       </div>
 
       <Slider ref={slider} {...settings}>
