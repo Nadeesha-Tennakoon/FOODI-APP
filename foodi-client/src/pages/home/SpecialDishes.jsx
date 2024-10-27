@@ -91,7 +91,7 @@ const SpecialDishes = () => {
       </div>
 
       {/* arrow btn */}
-      <div className="md:absolute right-3 top-20px">
+      <div className="flex justify-end  md:mr-24">
         <button
           onClick={() => slider?.current?.slickPrev()}
           className="btn p-2 rounded-full ml-5"
@@ -106,7 +106,11 @@ const SpecialDishes = () => {
         </button>
       </div>
 
-      <Slider ref={slider} {...settings}>
+      <Slider
+        ref={slider}
+        {...settings}
+        className="overflow-hidden mt-10 space-x-5"
+      >
         {recipes.map((item, i) => (
           <Cards key={i} item={item} />
         ))}
