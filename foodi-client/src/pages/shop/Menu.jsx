@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Cards from "../../components/Cards";
+import { FaFilter } from "react-icons/fa";
 
 const Menu = () => {
   const [menu, setMenu] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortOption, setSortOption] = useState("default");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(8);
 
   // loading data
   useEffect(() => {
@@ -34,19 +37,21 @@ const Menu = () => {
 
     setFilteredItems(filtered);
     setSelectedCategory(category);
+    setCurrentPage(1);
   };
 
   //Show all data
   const showAll = () => {
     setFilteredItems(menu);
     setSelectedCategory("all");
+    setCurrentPage(1);
   };
 
   // sorting based on A-Z, Z-A, Low-High pricing
   const handleSortChange = (option) => {
     setSortOption(option);
 
-    let sortedItems = [...filterItems];
+    let sortedItems = [...filteredItems];
 
     //logic
     switch (option) {
@@ -67,7 +72,14 @@ const Menu = () => {
     }
 
     setFilteredItems(sortedItems);
+    setCurrentPage(1);
   };
+
+  // pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
   return (
     <div>
       {/* menu banner */}
@@ -93,24 +105,92 @@ const Menu = () => {
       {/* menu shop section */}
       <div className="section-container">
         {/* filtering and sorting  */}
-        <div className="pb-16">
+        <div className=" flex flex-col md:flex-row flex-wrap md:justify-between items-center space-y-3 mb-8">
           {/* all category btns */}
           <div className="flex flex-row justify-start md:items-center md:gap-8 gap-4 flex-wrap">
-            <button onClick={showAll}>All</button>
-            <button onClick={() => filterItems("salad")}>Salad</button>
-            <button onClick={() => filterItems("pizza")}>Pizza</button>
-            <button onClick={() => filterItems("soup")}>Soups</button>
-            <button onClick={() => filterItems("dessert")}>Desserts</button>
-            <button onClick={() => filterItems("drinks")}>Drinks</button>
+            <button
+              onClick={showAll}
+              className={selectedCategory === "all" ? "active" : " "}
+            >
+              All
+            </button>
+            <button
+              onClick={() => filterItems("salad")}
+              className={selectedCategory === "salad" ? "active" : " "}
+            >
+              Salad
+            </button>
+            <button
+              onClick={() => filterItems("pizza")}
+              className={selectedCategory === "pizza" ? "active" : " "}
+            >
+              Pizza
+            </button>
+            <button
+              onClick={() => filterItems("soup")}
+              className={selectedCategory === "soup" ? "active" : " "}
+            >
+              Soups
+            </button>
+            <button
+              onClick={() => filterItems("dessert")}
+              className={selectedCategory === "dessert" ? "active" : " "}
+            >
+              Desserts
+            </button>
+            <button
+              onClick={() => filterItems("drinks")}
+              className={selectedCategory === "drinks" ? "active" : " "}
+            >
+              Drinks
+            </button>
+          </div>
+
+          {/* sorting base filtering */}
+
+          <div className="flex justify-end mb-4 rounded-sm">
+            <div className="bg-black p-2">
+              <FaFilter className="h-4 w-4 text-white" />
+            </div>
+            {/* sorting options */}
+            <select
+              name="sort"
+              id="sort"
+              onChange={(e) => handleSortChange(e.target.value)}
+              value={sortOption}
+              className="bg-black text-white px-2 py-1 rounded-sm"
+            >
+              <option value="default">Default</option>
+              <option value="A-Z">A-Z</option>
+              <option value="Z-A">Z-A</option>
+              <option value="low-to-high">Low to High</option>
+              <option value="high-to-low">High to Low</option>
+            </select>
           </div>
         </div>
 
         {/* products card */}
         <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4">
-          {filteredItems.map((item) => (
+          {currentItems.map((item) => (
             <Cards key={item._id} item={item} />
           ))}
         </div>
+      </div>
+      {/* Pagination Section */}
+      <div className="flex justify-center my-8">
+        {Array.from({
+          length: Math.ceil(filteredItems.length / itemsPerPage),
+        }).map((_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => paginate(index + 1)}
+            className={`mx-1 px-3 py-1 rounded-full ${
+              currentPage === index + 1 ? "bg-green text-white" : "bg-gray-200"
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
       </div>
     </div>
   );
